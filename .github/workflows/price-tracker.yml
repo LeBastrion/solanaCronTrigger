@@ -1,0 +1,22 @@
+name: Price Tracker Cron
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  trigger-price-tracker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Price Tracker Function
+        run: |
+          curl -X POST 'https://iejvyhazishlvayithuj.supabase.co/functions/v1/sol-price-tracker' \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllanZ5aGF6aXNobHZheWl0aHVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMTE4MjU5NSwiZXhwIjoyMDQ2NzU4NTk1fQ.EBXVSNLa7izfICX1yPAQ6iPJYRRrRHRiiFOnAv7owIE' \
+          -d '{}'
+      - name: Check Response
+        if: ${{ failure() }}
+        run: |
+          echo "Price tracker function call failed"
+          exit 1 
